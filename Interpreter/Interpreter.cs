@@ -219,4 +219,14 @@ public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Nothing>
 
         return Evaluate(expr.Right);
     }
+
+    public Nothing VisitWhileStmt(Stmt.While stmt)
+    {
+        while (IsTruthy(Evaluate(stmt.Condition)))
+        {
+            Execute(stmt.Body);
+        }
+
+        return new Nothing();
+    }
 }

@@ -8,6 +8,7 @@ public R VisitPrintStmt(Print stmt);
 public R VisitVarStmt(Var stmt);
 public R VisitBlockStmt(Block stmt);
 public R VisitIfStmt(If stmt);
+public R VisitWhileStmt(While stmt);
 }
 public class Expression: Stmt
 {
@@ -73,6 +74,20 @@ public If(Expr Condition, Stmt ThenBranch, Stmt? ElseBranch): base()
 this.Condition = Condition;
 this.ThenBranch = ThenBranch;
 this.ElseBranch = ElseBranch;
+}
+}
+public class While: Stmt
+{
+public readonly Expr Condition;
+public readonly Stmt Body;
+public override R Accept<R>(Visitor<R> visitor)
+{
+return visitor.VisitWhileStmt(this);
+}
+public While(Expr Condition, Stmt Body): base()
+{
+this.Condition = Condition;
+this.Body = Body;
 }
 }
 }

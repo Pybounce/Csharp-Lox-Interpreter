@@ -27,7 +27,8 @@ class ASTGenerator
             "Print : Expr expression",
             "Var : Token name, Expr initialiser",
             "Block : List<Stmt> statements",
-            "If : Expr Condition, Stmt ThenBranch, Stmt? ElseBranch"
+            "If : Expr Condition, Stmt ThenBranch, Stmt? ElseBranch",
+            "While : Expr Condition, Stmt Body"
         });
 
     }

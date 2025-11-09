@@ -39,7 +39,10 @@ public class Environment
             return;
         }
 
-        _enclosing?.Assign(name, value);
+        if (_enclosing != null) {
+            _enclosing.Assign(name, value);
+            return; 
+        }
 
         throw new RuntimeError(name, $"Undefined variable '{name.Lexeme}'.");
     }

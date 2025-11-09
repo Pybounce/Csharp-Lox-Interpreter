@@ -76,15 +76,25 @@ public class Parser
     {
         if (MatchAny(TokenType.IF)) { return IfStatement(); }
         if (MatchAny(TokenType.PRINT)) { return PrintStatement(); }
+        if (MatchAny(TokenType.WHILE)) { return WhileStatement(); }
         if (MatchAny(TokenType.LEFT_BRACE)) { return new Stmt.Block(Block()); }
         return ExpressionStatement();
+    }
+
+    private Stmt WhileStatement()
+    {
+        Consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.");
+        var condition = Expression();
+        Consume(TokenType.RIGHT_PAREN, "Expect ')' after 'while'.");
+        var body = Statement();
+        return new Stmt.While(condition, body); 
     }
 
     private Stmt IfStatement()
     {
         Consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
         var condition = Expression();
-        Consume(TokenType.RIGHT_PAREN, "Expect ')' after 'if' expression.");
+        Consume(TokenType.RIGHT_PAREN, "Expect ')' after 'if'.");
         var thenStatement = Statement();
         Stmt? elseStatement = null;
         if (MatchAny(TokenType.ELSE))

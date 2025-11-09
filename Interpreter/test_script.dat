@@ -1,12 +1,8 @@
-var a = 7;
-var b = 3;
-var extraPrint = false;
-if (a > b) {
-    print "a greater than b";
-}
-else if (b > a) {
-    print "b greater than a";
-}
-else { print "equal"; }
+var a = 0;
 
-if (extraPrint and (a > b)) { print "extra and a greater than b"; }
+while (a <= 0) {
+    print a;
+    a = a + 1;
+}
+
+print "done";

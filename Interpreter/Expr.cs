@@ -91,21 +91,20 @@ this.name = name;
 this.value = value;
 }
 }
-
-    public class Logical : Expr
-    {
-        public readonly Expr Left;
-        public readonly Token Op;
-        public readonly Expr Right;
-        public override R Accept<R>(Visitor<R> visitor)
-        {
-            return visitor.VisitLogicalExpr(this);
-        }
-        public Logical(Expr Left, Token Op, Expr Right) : base()
-        {
-            this.Left = Left;
-            this.Op = Op;
-            this.Right = Right;
-        }
-    }
+public class Logical: Expr
+{
+public readonly Expr Left;
+public readonly Token Op;
+public readonly Expr Right;
+public override R Accept<R>(Visitor<R> visitor)
+{
+return visitor.VisitLogicalExpr(this);
+}
+public Logical(Expr Left, Token Op, Expr Right): base()
+{
+this.Left = Left;
+this.Op = Op;
+this.Right = Right;
+}
+}
 }
