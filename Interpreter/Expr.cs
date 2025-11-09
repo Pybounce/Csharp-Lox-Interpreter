@@ -9,6 +9,7 @@ public R VisitLiteralExpr(Literal expr);
 public R VisitUnaryExpr(Unary expr);
 public R VisitVariableExpr(Variable expr);
 public R VisitAssignExpr(Assign expr);
+public R VisitLogicalExpr(Logical expr);
 }
 public class Binary: Expr
 {
@@ -90,4 +91,21 @@ this.name = name;
 this.value = value;
 }
 }
+
+    public class Logical : Expr
+    {
+        public readonly Expr Left;
+        public readonly Token Op;
+        public readonly Expr Right;
+        public override R Accept<R>(Visitor<R> visitor)
+        {
+            return visitor.VisitLogicalExpr(this);
+        }
+        public Logical(Expr Left, Token Op, Expr Right) : base()
+        {
+            this.Left = Left;
+            this.Op = Op;
+            this.Right = Right;
+        }
+    }
 }

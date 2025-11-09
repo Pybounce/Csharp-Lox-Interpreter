@@ -129,7 +129,7 @@ public class Parser
 
     private Expr Assignment()
     {
-        var expr = Equality();
+        var expr = LogicOr();
 
         if (MatchAny(TokenType.EQUAL))
         {
@@ -143,6 +143,34 @@ public class Parser
             }
             Error(equals, "Invalid assignment target.");
         }
+        return expr;
+    }
+
+    private Expr LogicOr()
+    {
+        var expr = LogicAnd();
+
+        while (MatchAny(TokenType.OR))
+        {
+            var op = Previous();
+            var right = LogicAnd();
+            expr = new Expr.Logical(expr, op, right);
+        }
+
+        return expr;
+    }
+    
+    private Expr LogicAnd()
+    {
+        var expr = Equality();
+
+        while (MatchAny(TokenType.AND))
+        {
+            var op = Previous();
+            var right = Equality();
+            expr = new Expr.Logical(expr, op, right);
+        }
+
         return expr;
     }
 

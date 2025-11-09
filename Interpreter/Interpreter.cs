@@ -204,4 +204,19 @@ public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Nothing>
         }
         return new Nothing();
     }
+
+    public object VisitLogicalExpr(Expr.Logical expr)
+    {
+        var left = Evaluate(expr.Left);
+        if (expr.Op.TokenType == TokenType.OR)
+        {
+            if (IsTruthy(left)) { return left; }
+        }
+        else
+        {
+            if (!IsTruthy(left)) { return left; }
+        }
+
+        return Evaluate(expr.Right);
+    }
 }

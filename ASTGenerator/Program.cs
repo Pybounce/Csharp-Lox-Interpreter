@@ -16,7 +16,8 @@ class ASTGenerator
             "Literal : Object value",
             "Unary : Token op, Expr right",
             "Variable : Token name",
-            "Assign : Token name, Expr value"
+            "Assign : Token name, Expr value",
+            "Logical : Expr Left, Token Op, Expr Right"
         };
         DefineAst(Directory.GetCurrentDirectory(), "Expr", types);
 
