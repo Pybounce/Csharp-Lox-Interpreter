@@ -15,8 +15,16 @@ class ASTGenerator
             "Grouping : Expr expression",
             "Literal : Object value",
             "Unary : Token op, Expr right",
+            "Variable : Token name"
         };
         DefineAst(Directory.GetCurrentDirectory(), "Expr", types);
+
+        DefineAst(Directory.GetCurrentDirectory(), "Stmt", new List<string>
+        {
+            "Expression : Expr expression",
+            "Print : Expr expression",
+            "Var : Token name, Expr initialiser"
+        });
 
     }
 

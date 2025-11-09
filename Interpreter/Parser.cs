@@ -14,16 +14,82 @@ public class Parser
         _tokens = tokens;
     }
 
-    public Expr? Parse()
+    public List<Stmt> Parse()
+    {
+        var statements = new List<Stmt>();
+        while (!IsAtEnd())
+        {
+            statements.Add(Declaration());
+        }
+        return statements;
+    }
+
+    private Stmt? Declaration()
     {
         try
         {
-            return Expression();
+            if (MatchAny(TokenType.VAR)) { return VarDeclaration(); }
+            return Statement();
         }
         catch (ParseError)
         {
+            Synchronise();
             return null;
         }
+    }
+
+    private Stmt VarDeclaration()
+    {
+        var name = Consume(TokenType.IDENTIFIER, "Expect variable name.");
+
+        Expr initialiser = null;
+        if (MatchAny(TokenType.EQUAL)) { initialiser = Expression(); }
+        Consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+
+        return new Stmt.Var(name, initialiser);
+    }
+    
+    private void Synchronise()
+    {
+        Advance();
+
+        while (!IsAtEnd())
+        {
+            if (Previous().TokenType == TokenType.SEMICOLON) { return; }
+            switch (Peek().TokenType)
+            {
+                case TokenType.CLASS:
+                case TokenType.FUN:
+                case TokenType.VAR:
+                case TokenType.FOR:
+                case TokenType.IF:
+                case TokenType.WHILE:
+                case TokenType.PRINT:
+                case TokenType.RETURN:
+                    return;
+            }
+            Advance();
+        }
+    }
+
+    private Stmt Statement()
+    {
+        if (MatchAny(TokenType.PRINT)) { return PrintStatement(); }
+        return ExpressionStatement();
+    }
+
+    private Stmt PrintStatement()
+    {
+        var value = Expression();
+        Consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+    
+    private Stmt ExpressionStatement()
+    {
+        var expr = Expression();
+        Consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
     }
 
     private Expr Expression()
@@ -111,6 +177,8 @@ public class Parser
             Consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
+        if (MatchAny(TokenType.IDENTIFIER)) { return new Expr.Variable(Previous()); }
+
         throw Error(Peek(), "Expect expression.");
     }
 

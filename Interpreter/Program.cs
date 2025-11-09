@@ -36,8 +36,8 @@ class Lox
     {
         var source = System.IO.File.ReadAllText(path);
         Run(source);
-        if (_hadError) { Environment.Exit(65); }
-        if (_hadRuntimeError) { Environment.Exit(70); }
+        if (_hadError) { System.Environment.Exit(65); }
+        if (_hadRuntimeError) { System.Environment.Exit(70); }
     }
 
     static void Run(string source)
@@ -47,11 +47,11 @@ class Lox
         var tokens = scanner.ScanTokens();
 
         var parser = new Parser(tokens);
-        var expression = parser.Parse();
+        var statements = parser.Parse();
 
-        if (_hadError || expression == null) { return; }
+        if (_hadError || statements == null) { return; }
 
-        _interpreter.Interpret(expression);
+        _interpreter.Interpret(statements);
     }
 
     public static void RuntimeError(RuntimeError error)

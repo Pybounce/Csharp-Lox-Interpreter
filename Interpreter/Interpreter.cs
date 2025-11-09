@@ -1,15 +1,19 @@
 
+public readonly struct Nothing { }
 
-
-public class Interpreter : Expr.Visitor<Object>
+public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Nothing>
 {
 
-    public void Interpret(Expr expression)
+    private Environment _environment = new Environment();
+
+    public void Interpret(List<Stmt> statements)
     {
         try
         {
-            var value = Evaluate(expression);
-            Console.WriteLine(Stringify(value));
+            foreach (var stmt in statements)
+            {
+                Execute(stmt);
+            }
         }
         catch (RuntimeError error)
         {
@@ -97,6 +101,11 @@ public class Interpreter : Expr.Visitor<Object>
         return expr.Accept(this);
     }
 
+    private void Execute(Stmt stmt)
+    {
+        stmt.Accept(this);
+    }
+
     private bool IsTruthy(Object obj)
     {
         if (obj == null) { return false; }
@@ -122,4 +131,33 @@ public class Interpreter : Expr.Visitor<Object>
         throw new RuntimeError(op, "Operands must both be numbers.");
     }
 
+    public Nothing VisitExpressionStmt(Stmt.Expression stmt)
+    {
+        Evaluate(stmt.expression);
+        return new Nothing();
+    }
+
+    public Nothing VisitPrintStmt(Stmt.Print stmt)
+    {
+        var value = Evaluate(stmt.expression);
+        Console.WriteLine(Stringify(value));
+        return new Nothing();
+    }
+
+    public Nothing VisitVarStmt(Stmt.Var stmt)
+    {
+        object value = null;
+        if (stmt.initialiser != null)
+        {
+            value = Evaluate(stmt.initialiser);
+        }
+
+        _environment.Define(stmt.name.Lexeme, value);
+        return new Nothing();
+    }
+
+    public object VisitVariableExpr(Expr.Variable expr)
+    {
+        return _environment.Get(expr.name);
+    }
 }
