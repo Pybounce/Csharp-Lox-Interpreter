@@ -74,11 +74,59 @@ public class Parser
 
     private Stmt Statement()
     {
+        if (MatchAny(TokenType.FOR)) { return ForStatement(); }
         if (MatchAny(TokenType.IF)) { return IfStatement(); }
         if (MatchAny(TokenType.PRINT)) { return PrintStatement(); }
         if (MatchAny(TokenType.WHILE)) { return WhileStatement(); }
         if (MatchAny(TokenType.LEFT_BRACE)) { return new Stmt.Block(Block()); }
         return ExpressionStatement();
+    }
+
+    private Stmt ForStatement()
+    {
+        Consume(TokenType.LEFT_PAREN, "Expect '(' after 'for' statement");
+        Stmt initializer;
+        if (MatchAny(TokenType.SEMICOLON))
+        {
+            initializer = null;
+        }
+        else if (MatchAny(TokenType.VAR))
+        {
+            initializer = VarDeclaration();
+        }
+        else
+        {
+            initializer = ExpressionStatement();
+        }
+
+        Expr condition = null;
+        if (!Check(TokenType.SEMICOLON))
+        {
+            condition = Expression();
+        }
+        Consume(TokenType.SEMICOLON, "Expect ';' after loop condition.");
+
+        Expr increment = null;
+        if (!Check(TokenType.RIGHT_PAREN))
+        {
+            increment = Expression();
+        }
+        Consume(TokenType.RIGHT_PAREN, "Expect ')' after loop.");
+
+        var body = Statement();
+
+        if (increment != null)
+        {
+            body = new Stmt.Block(new List<Stmt>() { body, new Stmt.Expression(increment) });
+        }
+
+        if (condition == null) { condition = new Expr.Literal(true); }
+        body = new Stmt.While(condition, body);
+
+        if (initializer != null) { body = new Stmt.Block(new List<Stmt>() { initializer, body }); }
+        
+        return body;
+        
     }
 
     private Stmt WhileStatement()
@@ -87,7 +135,7 @@ public class Parser
         var condition = Expression();
         Consume(TokenType.RIGHT_PAREN, "Expect ')' after 'while'.");
         var body = Statement();
-        return new Stmt.While(condition, body); 
+        return new Stmt.While(condition, body);
     }
 
     private Stmt IfStatement()
