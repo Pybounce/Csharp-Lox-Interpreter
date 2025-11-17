@@ -19,6 +19,8 @@ public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Nothing>
         Globals.Define("print", new lox.native_functions.Print());
         Globals.Define("print_line", new lox.native_functions.PrintLine());
         Globals.Define("is_number", new lox.native_functions.IsNumber());
+        Globals.Define("read_key", new lox.native_functions.ReadKey());
+        Globals.Define("try_read_key", new lox.native_functions.TryReadKey());
 
         _environment = Globals;
     }

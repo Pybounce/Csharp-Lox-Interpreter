@@ -1,0 +1,136 @@
+
+// animations taken from .net quickdraw
+
+var wait = "------------------------------------------------------                                        
+
+
+            _O                          O_            
+           |/|_          wait          _|\|           
+           /\                            /\           
+          /  |                          |  \          
+------------------------------------------------------
+";
+
+var fire = "------------------------------------------------------                                        
+                       ********                       
+                       * FIRE *                       
+            _O         ********         O_            
+           |/|_                        _|\|           
+           /\          any key           /\           
+          /  |                          |  \          
+------------------------------------------------------
+";
+
+var lose_slow = "------------------------------------------------------
+
+
+                                      > ╗__O          
+         //            Too Slow           / \         
+        O/__/\         You Lose          /\           
+             \                          |  \          
+------------------------------------------------------
+";
+
+var lose_fast = "------------------------------------------------------                                        
+
+
+                       Too Fast       > ╗__O          
+         //           You Missed          / \         
+        O/__/\         You Lose          /\           
+             \                          |  \          
+------------------------------------------------------
+";
+
+var win = "------------------------------------------------------
+
+
+          O__╔ <                                      
+         / \                               \\         
+           /\          You Win          /\__\O        
+          /  |                          /             
+------------------------------------------------------
+";
+
+
+fun print_main_menu() {
+    print_line("------------------------------------------------------
+Pick a difficulty: 
+[1] Easy 
+[2] Medium
+[3] Hard
+[4] Whatever comes after hard
+[5] Super hard?
+------------------------------------------------------");
+}
+
+fun get_difficulty() {
+    while (true) {
+        clear();
+        print_main_menu();
+        var input = read_key();
+        if (is_number(input) and to_number(input) > 0 and to_number(input) <= 5) {
+            return to_number(input);
+        }
+    }
+    return 1;
+}
+
+fun wait_phase_success(wait_time) {
+    var start_time = clock();
+    print_line(wait);
+
+    while (clock() - start_time < wait_time) {
+        if (try_read_key() != nil) {
+            return false;
+        }
+    }
+    return true;
+}
+
+fun fire_phase_success(fire_time) {
+    var start_time = clock();
+    print_line(fire);
+
+    while (clock() - start_time < fire_time) {
+        // firing
+        if (try_read_key() != nil) {
+            return true;
+        }
+    }
+    return false;
+}
+
+fun wait_for(millis) {
+    var start_time = clock();
+    while (clock() - start_time < millis) { }
+}
+
+var score = 0;
+
+while (true) {
+    var difficulty = get_difficulty();
+    var wait_time = random_range_rounded(1000, 3000);
+    var fire_time = 1000 / difficulty;
+    var end_wait_time = 2500;
+
+    clear();
+    if (wait_phase_success(wait_time)) {
+        clear();
+        if (fire_phase_success(fire_time)) {
+            clear();
+            print_line(win);
+        }
+        else {
+            clear();
+            print_line(lose_slow);
+        }
+    }
+    else {
+        clear();
+        print_line(lose_fast);
+    }
+
+    wait_for(end_wait_time);
+
+}
+
