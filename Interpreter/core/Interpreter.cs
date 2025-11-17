@@ -13,10 +13,12 @@ public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Nothing>
         Globals.Define("clock", new lox.native_functions.Clock());
         Globals.Define("read_line", new lox.native_functions.ReadLine());
         Globals.Define("random_range_rounded", new lox.native_functions.RandomRangeRounded());
-        Globals.Define("to_double", new lox.native_functions.ToDouble());
+        Globals.Define("to_number", new lox.native_functions.ToNumber());
         Globals.Define("to_string", new lox.native_functions.ToString());
+        Globals.Define("clear", new lox.native_functions.Clear());
         Globals.Define("print", new lox.native_functions.Print());
         Globals.Define("print_line", new lox.native_functions.PrintLine());
+        Globals.Define("is_number", new lox.native_functions.IsNumber());
 
         _environment = Globals;
     }

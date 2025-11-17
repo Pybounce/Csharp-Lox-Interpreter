@@ -1,31 +1,49 @@
 
 var score = 0;
 var upper_range = 100;
+var info = "New Game Started! :D";
+
+fun print_header() {
+
+    print_line("------------------------------------------------------");
+    print_line("Guess the number between 0-" + to_string(upper_range));
+    print_line("Score: " + to_string(score));
+    print_line("------------------------------------------------------");
+    print_line("");
+
+}
 
 while (true) {
-    var target = to_double(random_range_rounded(0, upper_range));
+    var target = to_number(random_range_rounded(0, upper_range));
     var guess = nil;
-    
-    print_line("");
-    print_line("Guess the number between 0-" + to_string(upper_range));
-    print("Guess: ");
-    guess = to_double(read_line());
-
 
     while (guess != target) {
+
+        clear();
+
+        print_header();
+        print_line(info);
+
+        print("Guess: ");
+        var input = read_line();
         print_line("");
-        if (guess < target) {
-            print_line(to_string(guess) + " was too low!");
+
+        if (is_number(input)) {
+            guess = to_number(input);
+            if (guess < target) {
+                info = to_string(guess) + " was too low!";
+            }
+            else if (guess > target) {
+                info = to_string(guess) + " was too high!";
+            }
         }
         else {
-            print_line(to_string(guess) + " was too high!");
+            info = "Invalid input: Only numbers are allowed.";
         }
-        print("Guess: ");
-        guess = to_double(read_line());
-    }
-    print_line("");
 
+    }
+
+    clear();
     score = score + 1;
-    print_line(to_string(guess) + " is correct!");
-    print_line("Your score is now " + to_string(score));
+    info = "Correct! Starting new game :D";
 }

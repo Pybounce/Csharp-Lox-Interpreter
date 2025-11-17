@@ -1,6 +1,6 @@
 namespace lox.native_functions;
 
-public class ToDouble : LoxCallable
+public class IsNumber : LoxCallable
 {
     public int Arity() => 1;
 
@@ -8,8 +8,8 @@ public class ToDouble : LoxCallable
     {
         if (double.TryParse(args[0].ToString(), out var d))
         {
-            return d;
+            return true;
         }
-        throw new RuntimeError(paren, "Failed to parse to double");
+        return false;
     }
 }
