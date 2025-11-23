@@ -8,6 +8,8 @@ public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Nothing>
     public readonly Environment Globals = new Environment();
     private Environment _environment;
 
+    private List<Stmt> _statementStack = new List<Stmt>();
+
     public Interpreter()
     {
         Globals.Define("clock", new lox.native_functions.Clock());
