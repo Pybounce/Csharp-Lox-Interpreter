@@ -194,7 +194,6 @@ public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Nothing>
 
     public Nothing VisitVarStmt(Stmt.Var stmt)
     {
-        Console.WriteLine("var");
         object value = null;
         if (stmt.initialiser != null)
         {
@@ -219,7 +218,6 @@ public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Nothing>
 
     public Nothing VisitBlockStmt(Stmt.Block stmt)
     {
-        Console.WriteLine("pop block");
         _statementStack.Pop();
         ExecuteBlock(stmt.statements, new Environment(_environment));
         return new Nothing();
@@ -231,7 +229,6 @@ public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Nothing>
         _statementStack.Push(new StackEvent.UnwrapEnvironment{});
         for (int i = statements.Count - 1; i >= 0; i--)
         {
-            Console.WriteLine("add some block statement");
             _statementStack.Push(new StackEvent.StatementEvent(statements[i]));
         }
     }
@@ -269,13 +266,10 @@ public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Nothing>
     {
         if (!IsTruthy(Evaluate(stmt.Condition)))
         {
-            Console.WriteLine("while stopped");
             _statementStack.Pop();
         }
         else
         {
-                        Console.WriteLine("while going");
-
             _statementStack.Push(new StackEvent.StatementEvent(stmt.Body));
         }
 

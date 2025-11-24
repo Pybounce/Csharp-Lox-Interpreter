@@ -1,10 +1,9 @@
-var a = 0;
 
-fun incrementa() {
-    a = a + 1;
+var b = 0;
+
+if (b == 0) {
+    var a = 5;
+    b = a;
 }
 
-while (a < 5) {
-    print_line(a);
-    incrementa();
-}
+print_line(b);
